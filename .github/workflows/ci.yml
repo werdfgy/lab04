@@ -16,32 +16,32 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: project_configure
+      - name: Configure CMake
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 
-      - name: project_build
+      - name: Build
         run: cmake --build build --config Release
 
-      - name: hello_world_test (Ubuntu)
+      - name: Run hello_world (Linux)
         if: matrix.os == 'ubuntu-latest'
         run: |
-          chmod +x build/hello_world
-          ./build/hello_world
+          chmod +x build/hello_world/hello_world
+          ./build/hello_world/hello_world
         shell: bash
 
-      - name: solver_test (Ubuntu)
+      - name: Run solver (Linux)
         if: matrix.os == 'ubuntu-latest'
         run: |
-          chmod +x build/solver
-          echo "1 -5 6" | ./build/solver
+          chmod +x build/solver/solver
+          echo "1 -5 6" | ./build/solver/solver
         shell: bash
 
-      - name: hello_world_test (Windows)
+      - name: Run hello_world (Windows)
         if: matrix.os == 'windows-latest'
-        run: .\build\Release\hello_world.exe
+        run: .\build\hello_world\Release\hello_world.exe
         shell: pwsh
 
-      - name: solver_test (Windows)
+      - name: Run solver (Windows)
         if: matrix.os == 'windows-latest'
-        run: echo "1 -5 6" | .\build\Release\solver.exe
+        run: echo "1 -5 6" | .\build\solver\Release\solver.exe
         shell: pwsh
