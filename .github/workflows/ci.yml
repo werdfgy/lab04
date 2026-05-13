@@ -1,0 +1,41 @@
+name: CI Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: project_configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: project_build
+        run: cmake --build build --config Release
+
+      - name: hello_world_test
+        shell: bash
+        run: |
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+            ./build/Release/hello_world.exe
+          else
+            ./build/hello_world
+          fi
+
+      - name: solver_test
+        shell: bash
+        run: |
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+            echo "1 -5 6" | ./build/Release/solver.exe
+          else
+            echo "1 -5 6" | ./build/solver
+          fi
